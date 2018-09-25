@@ -9,8 +9,13 @@ var middleware = require('../moddlewares/autenticacion'); //lo impotamos para us
 
 //obtener todos los usuarios
 app.get('/', (req, res, next) => {
+    var desde = req.query.desde || 0; //guardamos en una varible la catidad de registros si no viene
+    //la igualamos a 0
+    desde = Number(desde); //seimpre la convertimos a tipo numerica
     //usamos la variable del modelo y gracias a mooogose podemos hacer consultas find({}
     Usuario.find({}, 'nombre email img role')
+        .skip(desde) //para ir solicitado de 5 en 5
+        .limit(5)
         .exec(
             (err, usuario) => {
                 //podemor recibir un error o la data si todo sale bien
@@ -22,11 +27,16 @@ app.get('/', (req, res, next) => {
                     });
                 }
                 //si no sucede nada de eso entonses has esto
-                res.status(200).json({
-                    ok: true,
-                    mensaje: 'Petcion de Data de Usuarios :: Ok',
-                    Usuarios: usuario //aquiva la data del usuario es redundate poner del tipo usuario
-                })
+
+                Usuario.count({}, (err, conteo) => {
+                    res.status(200).json({
+                        ok: true,
+                        mensaje: 'Petcion de Data de Usuarios :: Ok',
+                        total: conteo,
+                        Usuarios: usuario //aquiva la data del usuario es redundate poner del tipo usuario
+                    })
+                });
+
             })
 });
 
