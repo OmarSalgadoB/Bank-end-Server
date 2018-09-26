@@ -15,9 +15,10 @@ var usuarioSchema = new Schema({
     email: { type: String, unique: true, required: [true, 'El correo es Nesesario'] },
     password: { type: String, required: [true, 'La contraseña es requerida'] },
     img: { type: String },
-    role: { type: String, required: true, default: 'USER_ROLE', enum: rolesValidos } //enumeramos los roles
+    role: { type: String, required: true, default: 'USER_ROLE', enum: rolesValidos }, //enumeramos los roles
     //required si es obligatorio y se queremos que envie mensaje va entre corchetes
     //default le ponemos un valor por defecto
+    google: { type: Boolean, default: false }
 });
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico' });
 //le decimos que este esquema va a usar el pugin le pasamos la varible de la libreria
